@@ -1,11 +1,11 @@
 {
     "name": "bestbuy-scraper",
-    "version": "1.2",
+    "version": "1.0.0",
     "description": "",
     "main": "BestBuyMonitor2.js",
     "directories": {
         "scripts": {
-            "test": "echo \"Error: no test specified\" && exit 1"
+            "start": "node BestBuyMonitor2.js"
           },
           "keywords": [],
           "author": "Alex Berg",
