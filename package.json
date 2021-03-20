@@ -3,9 +3,6 @@
     "version": "1.0.0",
     "description": "",
     "main": "BestBuyMonitor2.js",
-    "scripts": {
-        "start": "node BestBuyMonitor2.js"
-      },
     "engines": {
         "node": "15.x"
     },
