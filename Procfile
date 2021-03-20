@@ -1,0 +1,1 @@
+worker: node BestBuyMonitor2.js
