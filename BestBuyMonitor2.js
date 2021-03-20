@@ -1,11 +1,13 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 
+const axios = require("axios")
+const cheerio = require("cheerio")
+
 var urls = ['https://www.bestbuy.com/site/evga-geforce-rtx-3070-xc3-ultra-gaming-8gb-gddr6-pci-express-4-0-graphics-card/6439299.p?skuId=6439299', 'https://www.bestbuy.com/site/msi-nvidia-geforce-rtx-3070-ventus-3x-oc-bv-8gb-gddr6-pci-express-4-0-graphics-card/6438278.p?skuId=6438278', 'https://www.bestbuy.com/site/nvidia-geforce-rtx-3080-10gb-gddr6x-pci-express-4-0-graphics-card-titanium-and-black/6429440.p?skuId=6429440', 'https://www.bestbuy.com/site/asus-geforce-rtx-3080-10gb-gddr6x-pci-express-4-0-strix-graphics-card-black/6432445.p?skuId=6432445', 'https://www.bestbuy.com/site/gigabyte-nvidia-geforce-rtx-3080-gaming-oc-10gb-gddr6x-pci-express-4-0-graphics-card/6430620.p?skuId=6430620', 'https://www.bestbuy.com/site/gigabyte-nvidia-geforce-rtx-3080-aorus-master-10gb-gddr6x-pci-express-4-0-graphics-card/6436223.p?skuId=6436223', 'https://www.bestbuy.com/site/gigabyte-nvidia-geforce-rtx-3080-vision-oc-10gb-gddr6x-pci-express-4-0-graphics-card/6436219.p?skuId=6436219', 'https://www.bestbuy.com/site/evga-geforce-rtx-3080-ftw3-ultra-gaming-10gb-gddr6-pci-express-4-0-graphics-card/6436196.p?skuId=6436196', 'https://www.bestbuy.com/site/pny-geforce-rtx-3080-10gb-xlr8-gaming-epic-x-rgb-triple-fan-graphics-card/6432655.p?skuId=6432655', 'https://www.bestbuy.com/site/gigabyte-nvidia-geforce-rtx-3080-eagle-oc-10gb-gddr6x-pci-express-4-0-graphics-card/6430621.p?skuId=6430621', 'https://www.bestbuy.com/site/nvidia-geforce-rtx-3070-8gb-gddr6-pci-express-4-0-graphics-card-dark-platinum-and-black/6429442.p?skuId=6429442', 'https://www.bestbuy.com/site/asus-nvidia-geforce-rog-strix-rtx3070-8gb-gddr6-pci-express-4-0-graphics-card-black/6439127.p?skuId=6439127', 'https://www.bestbuy.com/site/gigabyte-nvidia-geforce-rtx-3070-gaming-oc-8gb-gddr6-pci-express-4-0-graphics-card/6437909.p?skuId=6437909'
 , 'https://www.bestbuy.com/site/gigabyte-nvidia-geforce-rtx-3070-gaming-oc-8gb-gddr6-pci-express-4-0-graphics-card/6437909.p?skuId=6437909', 'https://www.bestbuy.com/site/gigabyte-nvidia-geforce-rtx-3070-vision-oc-8gb-gddr6-pci-express-4-0-graphics-card/6439385.p?skuId=6439385', 'https://www.bestbuy.com/site/gigabyte-nvidia-geforce-rtx-3070-aorus-master-8gb-gddr6-pci-express-4-0-graphics-card/6439384.p?skuId=6439384'
 ];    
-const axios = require("axios")
-const cheerio = require("cheerio")
+
 var cmd = "$scrape ";
 async function fetchHTML(url) {
     try{
@@ -16,30 +18,37 @@ async function fetchHTML(url) {
   }
 }
 
+client.on("guildCreate", guild => {
+    // This event triggers when the bot joins a guild.    
+   
+
+            try{
+                guild.channels.cache.find(channel => channel.name === "scrapy-monitor").send(`Hello! I'm Scrapy! I am currently monitoring ${urls.length} URLs to check for restocks! Any restocks will show up here!`);
+            } catch(error){
+                guild.channels.create('scrapy-monitor', { //Create a channel
+                    type: 'text', //Make sure the channel is a text channel
+                });
+                setTimeout(() => console.log("hi"), 500);
+                try{
+                guild.channels.cache.find(channel => channel.name === "scrapy-monitor").send(`Hello! I'm Scrapy! I am currently monitoring ${urls.length} URLs to check for restocks! Any restocks will show up here!`);}
+                catch(error){
+                    console.log(error);
+                }
+            }
+});
+
+client.on("message", message => {
+    if(message.content.startsWith("$scrapy help")){
+        message.channel.send(`Hello! I'm Scrapy! I am currently monitoring ${urls.length} URLs to check for restocks! Any restocks will show up in the 'scrapy-monitor' chat!`)
+    }
+
+});
+
 
 client.on('ready', () => {
     console.log('Signed in ');
     client.user.setActivity("BestBuy", { type: "Watching"})
-
-    const botGuilds = client.guilds
-
-        client.guilds.cache.forEach((guild)  => {
-            console.log(guild.name)
-            
-            try{
-                guild.channels.cache.find(channel => channel.name === "scrapy-monitor").send(`Scanning ${urls.length} BestBuy URLs for Restocks`);
-            } catch(error){
-                message.guild.channels.create('scrapy-monitor', { //Create a channel
-                    type: 'text', //Make sure the channel is a text channel
-                    permissionOverwrites: [{ //Set permission overwrites
-                        id: message.guild.id,
-                        allow: ['VIEW_CHANNEL'],
-                    }]
-                });
-                guild.channels.cache.find(channel => channel.name === "scrapy-monitor").send(`Scanning ${urls.length} BestBuy URLs for Restocks`);
-            }
-        });
-});
+}); 
 
 async function doStuff(message){
     try{
@@ -73,7 +82,7 @@ async function doStuff(message){
     var imgURL = `https://pisces.bbystatic.com/image2/BestBuy_US/images/products/${encodeURIComponent(txt.substr(0, 4))}/${encodeURIComponent(txt)}_sd.jpg`;
     var scrapeOutput = new Discord.MessageEmbed()
         .setTitle(`${$('h1[class="heading-5 v-fw-regular"]').html()}`)
-        .setURL(url)
+        .setURL(message.trim())
         .setImage(imgURL)
         .setAuthor("BestBuy", "https://i.imgur.com/CzpBBUf.png")
         .setTimestamp()
