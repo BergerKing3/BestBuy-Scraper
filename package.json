@@ -1,0 +1,14 @@
+{
+    "name": "bestbuy-scraper",
+    "version": "1.2",
+    "description": "",
+    "main": "BestBuyMonitor2.js",
+    "directories": {
+        "scripts": {
+            "test": "echo \"Error: no test specified\" && exit 1"
+          },
+          "keywords": [],
+          "author": "Alex Berg",
+          "license": "ISC"
+    }
+}
