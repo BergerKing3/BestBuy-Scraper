@@ -7,6 +7,9 @@
         "scripts": {
             "start": "node BestBuyMonitor2.js"
           },
+        "engines": {
+            "node": "15.x"
+        },
           "keywords": [],
           "author": "Alex Berg",
           "license": "ISC"
